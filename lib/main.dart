@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:projectiseeff/provider/authProvider.dart';
+import 'package:projectiseeff/splashScreen.dart';
+import 'package:projectiseeff/ui/HomeScreen/HomeScreen.dart';
+import 'package:projectiseeff/ui/LocationScreen/LocationScreen.dart';
+import 'package:projectiseeff/ui/PatientData/PatientData.dart';
+import 'package:projectiseeff/ui/PatientDetails/PatientDetails.dart';
 import 'package:projectiseeff/ui/Register/RegisterScreen.dart';
+import 'package:projectiseeff/ui/information/information.dart';
+import 'package:projectiseeff/ui/instructions/intructions.dart';
 import 'package:projectiseeff/ui/login/LoginScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async{
@@ -9,7 +18,9 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+   create: (buildContext)=>AuthProviderr(),
+      child:const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Alzahimar',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFF2DEF2)),
         useMaterial3: true,
@@ -27,15 +38,16 @@ class MyApp extends StatelessWidget {
       routes: {
          RegisterScreen.routeName : (buildContext)=>RegisterScreen(),
          LoginScreen.routeName : (buildContext)=>LoginScreen(),
-        // PageofLocation.routeName : (buildContext)=>PageofLocation(),
-        // SplashScreen.routeName : (buildContext)=>SplashScreen(),
-        // instruction.routeName : (buildContext)=>instruction(),
-        // informationForPatient.routeName : (buildContext)=>informationForPatient(),
-        // information.routeName : (buildContext)=>information(),
-        // HomePage.routeName : (buildContext)=>HomePage(),
+         PageofLocation.routeName : (buildContext)=>PageofLocation(),
+        Splash.routeName : (buildContext)=>Splash(),
+         instruction.routeName : (buildContext)=>instruction(),
+         informationForPatient.routeName : (buildContext)=>informationForPatient(),
+         information.routeName : (buildContext)=>information(),
+         HomePage.routeName : (buildContext)=>HomePage(),
+        PatientData.routeName : (buildContext)=>PatientData(),
         // ForgetPassword.routeName : (buildContext)=>ForgetPassword(),
       },
-      initialRoute: RegisterScreen.routeName,
+      initialRoute: Splash.routeName,
     );
   }
 }

@@ -1,8 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:projectiseeff/database/UsersDao.dart';
+import 'package:projectiseeff/provider/authProvider.dart';
+import 'package:projectiseeff/ui/DialogUtils.dart';
+import 'package:projectiseeff/ui/HomeScreen/HomeScreen.dart';
 import 'package:projectiseeff/ui/Register/RegisterScreen.dart';
 import 'package:projectiseeff/ui/common/CustomFormField.dart';
 import 'package:projectiseeff/ui/firebaseErrorCodes.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = "LoginScreen";
@@ -20,6 +25,9 @@ class _RegisterScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFFF2DEF2),
+        ),
         backgroundColor: Color(0xFFF2DEF2),
         body: Container(
           padding: EdgeInsets.all(12),
@@ -105,16 +113,28 @@ class _RegisterScreenState extends State<LoginScreen> {
     if(formKey.currentState?.validate() == false){
       return ;
     }
+    var authProvider = Provider.of<AuthProviderr>(context,listen: false);
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text
+      DialogUtils.showLoading(context, 'Loading' , isCancelable: false);
+      await authProvider.login(emailController.text, passwordController.text);
+      DialogUtils.HideDialog(context);
+      DialogUtils.showMessage(context, "User logged In Successfully" ,
+          posActionName: "Ok",
+        posAction: (){
+        Navigator.pushNamed(context, HomePage.routeName);
+        },
+        negActionName: "Cancel"
       );
+
     } on FirebaseAuthException catch (e) {
-      if (e.code == firebaseErrorCodes.usernotfound) {
-        print('No user found for that email.');
-      } else if (e.code == firebaseErrorCodes.wrongpassword) {
-        print('Wrong password provided for that user.');
+      DialogUtils.HideDialog(context);
+      if (e.code == firebaseErrorCodes.usernotfound||
+          e.code == firebaseErrorCodes.wrongpassword||
+          e.code == firebaseErrorCodes.InvalidCredintials
+      ) {
+        DialogUtils.showMessage(context, "WrongEmail Or Password" ,
+        posActionName: "Ok"
+        );
       }
     }
   }
