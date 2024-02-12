@@ -10,7 +10,7 @@ import 'package:projectiseeff/ui/firebaseErrorCodes.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  static const String routeName = "LoginScreen";
+  static const String routeName = "LoginScreen"; 
   const LoginScreen({super.key});
 
   @override
@@ -42,6 +42,7 @@ class _RegisterScreenState extends State<LoginScreen> {
                     Image.asset(
                       "assets/rectangle-5.png",
                       width: 200,
+                      fit: BoxFit.fill,
                     ),
                     Text(
                       "Login",
